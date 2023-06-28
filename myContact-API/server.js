@@ -11,6 +11,8 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use("/api/contacts", require("./routes/contactRoutes"));
+app.use("/api/inventoryData", require("./routes/employeeRoutes.js"));
+app.use("/api/employees", require("./routes/employeeRoutes"));
 app.use(errorhandler);  
 
 app.listen(port, ()=>{

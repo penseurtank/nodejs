@@ -8,6 +8,7 @@ const contactForm = require("../model/contactModel");
 
 const getContacts = asyncHandler(async(req, res) => {
   const contacts = await contactForm.find();
+  //const contacts = await contactForm.find({ name : { $eq: req.body.name }, phone: {$eq: req.body.phone} });
   //res.status(200).json({ message: "Get all constacts." });
   res.status(200).json(contacts);
 });
@@ -19,7 +20,7 @@ const getContacts = asyncHandler(async(req, res) => {
  */
 
 const createContact = asyncHandler(async(req, res) => {
-  console.log("The request body is:",req.body);
+  //console.log("The request body is:",req.body);
     const {name, email, phone} = req.body;
     if(!name||!email||!phone){
         res.status(400);
