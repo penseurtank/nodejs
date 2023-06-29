@@ -83,7 +83,7 @@ const deleteContact = asyncHandler(async(req, res) => {
         await contactForm.deleteOne({_id: deleteContactById._id});
         console.log("one record deleted successfully.....")
         // res.status(200).json({ message: `Delete contact for ${req.params.id}` });
-        res.status(200).json(deleteContactById);
+        res.status(204).json(deleteContactById);
 
 }) ;
 

@@ -11,9 +11,10 @@ const getEmployees = asyncHandler(async (req, res) => {
   try {
     const data = await employeeForm.find();
     if (!data) {
+      res.status(404).send("Data Not Found!");
       throw new Error("No employee data found!");
     }
-    console.log(`findOne -- Success-->${data}`);
+    //console.log(`findOne -- Success-->${data}`);
     res.status(200).json(data);
     return data;
   } catch (error) {
@@ -59,13 +60,57 @@ const createEmployee = asyncHandler(async (req, res) => {
       res.status(201).json(createEmployees);
     } else {
       console.log("........:)", req.body);
-      res.status(400).send("Fields are mandatory!")
+      res.status(400).send("Fields are mandatory!");
       throw new Error("Fields are mandatory!");
     }
-  } catch (error) {s
+  } catch (error) {
     console.log(`findOne --Error-->${employeeDetails}`);
     return error;
   }
 });
 
-module.exports = { getEmployees, createEmployee };
+/**
+ * @desc delete employee
+ * @route DELETE /api/employee/:id
+ * @access public
+ */
+const deleteEmployee = asyncHandler(async (req, res) => {
+  try {
+    const deleteEmployeeByIds = await employeeForm.find(req.params.id);
+    console.log("=====Request Ids=========", deleteEmployeeByIds);
+    // if (deleteEmployeeByIds.isValid(id)) {
+    //   if (String(new deleteEmployeeByIds(id)) === id){
+    //     console.log("========Valid============",deleteEmployeeByIds);
+    //     res.status(200).json("It's valid id");
+    //   }else{
+    //     console.log("======Invalid==============",deleteEmployeeByIds);
+    //     res.status(404).send("It's not a valid ID!");
+    //   };
+    // } else 
+      if (
+      !Array.isArray(deleteEmployeeByIds) ||
+      !deleteEmployeeByIds.every((id) => ObjectId.isValid(id))
+    ) {
+      res.status(404).send("Incorrect employee id!");
+      throw new Error("Employee id not found");
+    } else if (deleteEmployeeByIds >= 2) {
+      // Convert deleteEmployeeByIds to ObjectId type
+      const employeeIdArray = deleteEmployeeByIds.map((id) => ObjectId(id));
+      // Delete multiple records using the array of ObjectIds
+      const result = await employeeForm.deleteMany({
+        _id: { $in: employeeIdArray },
+      });
+      console.log("Deleted items:", result.deletedCount);
+    } else {
+      await employeeForm.deleteOne({ _id: deleteEmployeeByIds._id });
+      console.log("one record deleted successfully.....");
+      res.status(200).json({ message: "one record deleted successfully....." });
+      //res.status(204).json({ message: `Delete employee for ${req.params.id}` });
+    }
+  } catch (error) {
+    console.log(`Error: request failed! ${employeeDetails}`);
+    return error;
+  }
+});
+
+module.exports = { getEmployees, createEmployee, deleteEmployee };

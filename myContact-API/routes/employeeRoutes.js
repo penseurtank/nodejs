@@ -13,11 +13,11 @@ router
   .get(getEmployees)
   //.post(insertEmployee)
   .post(createEmployee);
-// router
-//   .route("/:id")
+router
+  .route("/:id")
 //   .get(getEmployee)
 //   .put(updateEmployee)
-//   .delete(deleteEmployee);
+   .delete(deleteEmployee);
 
 
 module.exports = router;
